@@ -1,25 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
 body {
-  background-color: #0d0d0d;
-  background-image: radial-gradient(#1f1f1f 1px, transparent 1px);
-  background-size: 24px 24px;
-  color: #ffffff;
+  background-color: #0d0e12;
+  color: #f3f4f6;
   min-height: 100vh;
 }
 
-/* Header & Nav */
+/* Header & Navigation */
 header {
-  background-color: rgba(13, 13, 13, 0.8);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid #222222;
+  background-color: #121319;
+  border-bottom: 1px solid #222530;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -29,8 +26,8 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.2rem 2rem;
-  max-width: 1400px;
+  padding: 1rem 2rem;
+  max-width: 1300px;
   margin: 0 auto;
 }
 
@@ -38,205 +35,204 @@ header {
   font-weight: 800;
   font-size: 1.3rem;
   letter-spacing: -0.5px;
+  color: #fff;
 }
 
 .nav-links {
   display: flex;
   list-style: none;
-  gap: 12px;
+  gap: 24px;
 }
 
 .nav-links a {
-  color: #a0a0a0;
+  color: #9ca3af;
   text-decoration: none;
   font-weight: 600;
-  padding: 8px 16px;
-  border-radius: 20px;
-  transition: all 0.2s ease;
   font-size: 0.95rem;
+  transition: color 0.2s;
 }
 
-.nav-links a:hover {
-  color: #ffffff;
-  background-color: #1f1f1f;
-}
-
+.nav-links a:hover,
 .nav-links a.active {
-  color: #ffffff;
-  background-color: #262626;
+  color: #ff5500;
 }
 
-/* Hero Section */
+/* Sections Principales */
+main {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 30px 20px;
+}
+
 .hero {
-  max-width: 1400px;
-  margin: 40px auto 20px;
-  padding: 0 2rem;
+  margin-bottom: 30px;
 }
 
 .hero h1 {
-  font-size: 2.5rem;
+  font-size: 2.2rem;
   font-weight: 800;
-  letter-spacing: -1px;
+  letter-spacing: -0.8px;
+  margin-bottom: 8px;
 }
 
 .hero p {
-  color: #888888;
-  margin-top: 8px;
+  color: #8b92a1;
+  font-size: 1rem;
 }
 
-/* Container principal (Carrousel / Nouveautés) */
-.carousel-container {
-  max-width: 1400px;
-  margin: 20px auto 60px;
-  padding: 30px;
-  background: #121212;
-  border: 1px solid #222;
-  border-radius: 24px;
+/* Section Cartes & Carrousel */
+.carousel-container, .collection-page {
+  background: #121319;
+  border: 1px solid #222530;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 40px;
 }
 
-.carousel-container h2 {
-  font-size: 1.8rem;
-  font-weight: 800;
-  margin-bottom: 24px;
+.section-header {
   display: flex;
   align-items: center;
   gap: 10px;
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.badge-orange {
+  background-color: #ff5500;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 12px;
+  text-transform: uppercase;
 }
 
 /* Carrousel */
 .carousel {
   display: flex;
-  gap: 20px;
+  gap: 16px;
   overflow-x: auto;
-  padding-bottom: 20px;
+  padding-bottom: 12px;
   scroll-behavior: smooth;
 }
 
-/* Style de la Scrollbar */
 .carousel::-webkit-scrollbar {
-  height: 8px;
-}
-
-.carousel::-webkit-scrollbar-track {
-  background: #1a1a1a;
-  border-radius: 10px;
+  height: 6px;
 }
 
 .carousel::-webkit-scrollbar-thumb {
-  background: #333333;
+  background: #333745;
   border-radius: 10px;
 }
 
-.carousel::-webkit-scrollbar-thumb:hover {
-  background: #ff5500;
+/* Cartes (Même style pour Carrousel et Grille) */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
 }
 
-/* Cartes Style ClutchCollect */
-.carousel-item, .card {
-  min-width: 240px;
-  max-width: 260px;
-  background: #181818;
-  border: 1px solid #262626;
-  border-radius: 18px;
+.card, .carousel-item {
+  background: #181a22;
+  border: 1px solid #262936;
+  border-radius: 14px;
   padding: 14px;
-  position: relative;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 210px;
+  transition: transform 0.2s ease, border-color 0.2s ease;
   cursor: pointer;
   display: flex;
   flex-direction: column;
 }
 
-.carousel-item:hover, .card:hover {
-  transform: translateY(-6px);
-  border-color: #ff5500;
-  box-shadow: 0 12px 30px rgba(255, 85, 0, 0.15);
+.card:hover, .carousel-item:hover {
+  transform: translateY(-4px);
+  border-color: #3b3f54;
 }
 
-/* Conteneur image dans la carte */
 .card-img-wrapper {
+  position: relative;
   width: 100%;
-  height: 280px;
-  background: #0d0d0d;
-  border-radius: 12px;
+  height: 240px;
+  background: #0d0e12;
+  border-radius: 10px;
   overflow: hidden;
+  margin-bottom: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 14px;
-  border: 1px solid #222;
 }
 
-.carousel-item img, .card img {
+.card-img-wrapper img {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  padding: 10px;
 }
 
-/* Informations carte */
-.card-content h3, .carousel-item h4 {
-  font-size: 1rem;
+.card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.card-title {
+  font-size: 0.95rem;
   font-weight: 700;
-  color: #ffffff;
+  color: #fff;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-bottom: 8px;
 }
 
-/* Badges / Etiquettes */
-.tags {
+.card-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-top: auto;
+  gap: 4px;
 }
 
 .tag {
-  background: #242424;
-  color: #b0b0b0;
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-size: 0.75rem;
+  background-color: #222530;
+  color: #a0a7b5;
+  font-size: 0.72rem;
   font-weight: 600;
-  border: 1px solid #333333;
+  padding: 3px 7px;
+  border-radius: 6px;
 }
 
-.tag-highlight {
-  background: rgba(255, 85, 0, 0.15);
-  color: #ff5500;
-  border: 1px solid rgba(255, 85, 0, 0.3);
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid #222530;
 }
 
-.rating {
+.rating-badge {
   font-size: 0.85rem;
   font-weight: 700;
-  color: #ffb700;
-  margin-top: 6px;
+  color: #ffb800;
 }
 
-/* Grille de collection */
-.collection-page {
-  max-width: 1400px;
-  margin: 40px auto;
-  padding: 0 2rem;
-}
-
+/* Filtres */
 .filters {
   display: flex;
   gap: 12px;
-  margin: 30px 0;
+  margin-bottom: 24px;
   flex-wrap: wrap;
 }
 
 .filters select {
-  background: #181818;
-  color: #ffffff;
-  border: 1px solid #2d2d2d;
-  padding: 12px 18px;
-  border-radius: 12px;
-  font-weight: 600;
-  font-size: 0.9rem;
+  background: #181a22;
+  color: #e5e7eb;
+  border: 1px solid #262936;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 500;
   outline: none;
   cursor: pointer;
 }
@@ -245,56 +241,55 @@ header {
   border-color: #ff5500;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 24px;
-}
-
-/* Modal Dark / Neon */
+/* Modal */
 .modal {
   display: none;
   position: fixed;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(4px);
   justify-content: center;
   align-items: center;
   z-index: 1000;
 }
 
 .modal-content {
-  background: #161616;
-  border: 1px solid #333;
-  padding: 30px;
-  border-radius: 24px;
+  background: #181a22;
+  border: 1px solid #2f3342;
+  border-radius: 16px;
+  padding: 24px;
   max-width: 480px;
   width: 90%;
   position: relative;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
-}
-
-.modal-content img {
-  width: 100%;
-  max-height: 320px;
-  object-fit: contain;
-  background: #0d0d0d;
-  border-radius: 14px;
-  padding: 15px;
-  margin-bottom: 20px;
-  border: 1px solid #222;
+  color: #fff;
 }
 
 .close-btn {
   position: absolute;
-  right: 20px;
-  top: 15px;
-  color: #888;
-  font-size: 28px;
+  right: 18px; top: 14px;
+  font-size: 24px;
+  color: #8b92a1;
   cursor: pointer;
 }
 
 .close-btn:hover {
-  color: #ffffff;
+  color: #fff;
+}
+
+.modal-img-container {
+  width: 100%;
+  height: 280px;
+  background: #0d0e12;
+  border-radius: 10px;
+  margin: 15px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-img-container img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
