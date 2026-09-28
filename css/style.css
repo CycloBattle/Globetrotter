@@ -68,7 +68,7 @@ nav a:hover, nav a.active {
 .section-title {
     font-size: 1.5rem;
     margin-top: 30px;
-    margin-bottom: 20px; /* Espace sous le titre pour éviter les chevauchements */
+    margin-bottom: 20px; /* Don de l'air sous le titre */
     clear: both;
 }
 
@@ -98,7 +98,7 @@ nav a:hover, nav a.active {
 }
 
 /* ==========================================================================
-   GRILLE ET CARTES (DÉSOLARISATION DES IMAGES & ESPACEMENT)
+   GRILLE ET CARTES
    ========================================================================== */
 .grid-container {
     display: grid;
@@ -121,12 +121,12 @@ nav a:hover, nav a.active {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
 }
 
-/* Redimensionnement propre des images des cartes */
+/* Ajustement et redimensionnement des images dans les cartes */
 .card img {
     width: 100%;
     height: 230px;
-    object-fit: contain; /* Empêche l'image de se déformer */
-    background-color: #181513; /* Fond sombre derrière la bouteille/cannette */
+    object-fit: contain; /* Empêche l'image de dépasser ou de se déformer */
+    background-color: #181513;
     display: block;
 }
 
