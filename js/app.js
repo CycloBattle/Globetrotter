@@ -1,96 +1,46 @@
-let collectionData = [];
+// ==========================================================================
+// FONCTION DE FILTRAGE PAR RECHERCHE
+// ==========================================================================
+function filterCollection() {
+    const input = document.getElementById('searchInput').value.toLowerCase();
+    const cards = document.querySelectorAll('.card');
 
-// Charger les données depuis le fichier JSON
-async function fetchData() {
-  try {
-    const response = await fetch('js/data.json');
-    collectionData = await response.json();
-  } catch (error) {
-    console.error("Erreur de chargement des données :", error);
-  }
+    cards.forEach(card => {
+        const title = card.querySelector('.card-title')?.textContent.toLowerCase() || '';
+        if (title.includes(input)) {
+            card.style.display = "block";
+        } else {
+            card.style.display = "none";
+        }
+    });
 }
 
-// Carrousel des 10 derniers ajouts (Accueil)
-async function loadCarousel() {
-  await fetchData();
-  const carousel = document.getElementById('carousel');
-  
-  // Trier par date d'ajout et prendre les 10 plus récents
-  const latest = [...collectionData]
-    .sort((a, b) => new Date(b.dateAjout) - new Date(a.dateAjout))
-    .slice(0, 10);
+// ==========================================================================
+// GESTION DE LA FENÊTRE MODALE (POP-UP DÉTAILS)
+// ==========================================================================
+function openModal(title, imgSrc, type, volume, style, country, rating, description) {
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalImg').src = imgSrc;
+    document.getElementById('modalType').textContent = type;
+    document.getElementById('modalVolume').textContent = volume;
+    document.getElementById('modalStyle').textContent = style;
+    document.getElementById('modalCountry').textContent = country;
+    document.getElementById('modalRating').textContent = 'Note : ⭐ ' + rating;
+    document.getElementById('modalDescription').textContent = description;
 
-  carousel.innerHTML = latest.map(item => `
-    <div class="carousel-item">
-      <img src="${item.image}" alt="${item.nom}">
-      <h4>${item.nom}</h4>
-      <p>⭐ ${item.note}/5</p>
-    </div>
-  `).join('');
+    const modal = document.getElementById('itemModal');
+    modal.style.display = 'flex';
 }
 
-// Charger la grille de collection et gérer les filtres
-async function loadCollection() {
-  await fetchData();
-  renderGrid(collectionData);
-
-  // Ajouter les écouteurs sur les filtres
-  document.querySelectorAll('.filters select').forEach(select => {
-    select.addEventListener('change', applyFilters);
-  });
-
-  // Modal
-  document.getElementById('close-modal').onclick = () => {
-    document.getElementById('modal').style.display = 'none';
-  };
+function closeModal() {
+    const modal = document.getElementById('itemModal');
+    modal.style.display = 'none';
 }
 
-function renderGrid(items) {
-  const grid = document.getElementById('collection-grid');
-  grid.innerHTML = items.map(item => `
-    <div class="card" onclick="openModal('${item.id}')">
-      <img src="${item.image}" alt="${item.nom}">
-      <h3>${item.nom}</h3>
-      <div>
-        <span class="tag">${item.volume}</span>
-        <span class="tag">${item.theme}</span>
-        <span class="tag">${item.pays}</span>
-      </div>
-    </div>
-  `).join('');
-}
-
-function applyFilters() {
-  const type = document.getElementById('filter-type').value;
-  const volume = document.getElementById('filter-volume').value;
-  const theme = document.getElementById('filter-theme').value;
-  const pays = document.getElementById('filter-pays').value;
-
-  const filtered = collectionData.filter(item => {
-    return (!type || item.type === type) &&
-           (!volume || item.volume === volume) &&
-           (!theme || item.theme === theme) &&
-           (!pays || item.pays === pays);
-  });
-
-  renderGrid(filtered);
-}
-
-function openModal(id) {
-  const item = collectionData.find(i => i.id === id);
-  if (!item) return;
-
-  document.getElementById('modal-img').src = item.image;
-  document.getElementById('modal-title').innerText = item.nom;
-  document.getElementById('modal-desc').innerText = item.description;
-  document.getElementById('modal-rating').innerText = `Note : ⭐ ${item.note} / 5`;
-  
-  document.getElementById('modal-tags').innerHTML = `
-    <span class="tag">${item.type}</span>
-    <span class="tag">${item.volume}</span>
-    <span class="tag">${item.theme}</span>
-    <span class="tag">${item.pays}</span>
-  `;
-
-  document.getElementById('modal').style.display = 'flex';
-}
+// Fermer la modale en cliquant à l'extérieur
+window.onclick = function(event) {
+    const modal = document.getElementById('itemModal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+};
