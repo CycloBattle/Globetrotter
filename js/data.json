@@ -1,0 +1,26 @@
+[
+  {
+    "id": "can_001",
+    "nom": "Coca-Cola Fan Design",
+    "image": "images/coca_33cl_femme_belgique.jpg",
+    "type": "Cannette",
+    "volume": "33cl",
+    "theme": "Illustration femme",
+    "pays": "Belgique",
+    "note": 4.5,
+    "description": "Édition limitée avec illustration d'artiste contemporain.",
+    "dateAjout": "2026-09-20"
+  },
+  {
+    "id": "bou_001",
+    "nom": "Chimey Bleue Grande Réserve",
+    "image": "images/chimay_75cl_belgique.jpg",
+    "type": "Bouteille",
+    "volume": "75cl",
+    "theme": "Trappiste",
+    "pays": "Belgique",
+    "note": 5.0,
+    "description": "Bouteille numérotée millésimée.",
+    "dateAjout": "2026-09-25"
+  }
+]
