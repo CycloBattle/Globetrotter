@@ -11,7 +11,7 @@
  * complète (deux méthodes possibles y sont expliquées).
  */
 const SHEET_CSV_URL =
-  "https://docs.google.com/spreadsheets/d/1eWpclz7beYMajhqBP2ntZ4KWYr4f-bk12UZ7g02cKEo/export?format=csv&gid=2016268470";
+  "https://docs.google.com/spreadsheets/d/e/VOTRE_ID_DE_PUBLICATION/pub?output=csv";
 
 /* Colonnes attendues dans le Google Sheet (voir README.md) */
 const COLUMNS = {
@@ -28,6 +28,7 @@ const COLUMNS = {
   description: "Description",
   image: "ImageURL",
   date: "DateAjout",
+  illustrationFemme: "IllustrationFemme",
 };
 
 /* Image affichée quand ImageURL est vide ou invalide (SVG encodé, pas de
@@ -82,6 +83,9 @@ function normalizeRow(row) {
   const lat = parseFloat(get("latitude").replace(",", "."));
   const lng = parseFloat(get("longitude").replace(",", "."));
 
+  const illustrationRaw = get("illustrationFemme").toLowerCase();
+  const illustrationFemme = ["oui", "yes", "true", "1", "x"].includes(illustrationRaw);
+
   return {
     id: get("id") || get("nom"),
     nom: get("nom"),
@@ -97,6 +101,7 @@ function normalizeRow(row) {
     image: get("image"),
     date: get("date"),
     dateValue: parseDateSafe(get("date")),
+    illustrationFemme: illustrationFemme,
   };
 }
 
@@ -352,6 +357,7 @@ const activeFilters = {
   pays: "",
   brasserie: "",
   search: "",
+  illustrationFemme: false,
 };
 
 function uniqueSorted(values) {
@@ -403,6 +409,7 @@ function applyFilters(data) {
     if (activeFilters.contenance && p.contenance !== activeFilters.contenance) return false;
     if (activeFilters.pays && p.pays !== activeFilters.pays) return false;
     if (activeFilters.brasserie && p.brasserie !== activeFilters.brasserie) return false;
+    if (activeFilters.illustrationFemme && !p.illustrationFemme) return false;
     if (activeFilters.search) {
       const term = activeFilters.search.toLowerCase();
       const haystack = (p.nom + " " + p.brasserie + " " + p.pays + " " + p.style).toLowerCase();
@@ -474,6 +481,7 @@ async function initCollectionPage() {
   const contenanceContainer = document.getElementById("filter-contenance");
   const paysSelect = document.getElementById("filter-pays");
   const brasserieSelect = document.getElementById("filter-brasserie");
+  const illustrationBtn = document.getElementById("filter-illustration-femme");
 
   initMap();
 
@@ -519,6 +527,14 @@ async function initCollectionPage() {
       });
     }
 
+    if (illustrationBtn) {
+      illustrationBtn.addEventListener("click", () => {
+        activeFilters.illustrationFemme = !activeFilters.illustrationFemme;
+        illustrationBtn.classList.toggle("is-active", activeFilters.illustrationFemme);
+        refresh();
+      });
+    }
+
     if (resetBtn) {
       resetBtn.addEventListener("click", () => {
         activeFilters.type = null;
@@ -526,9 +542,11 @@ async function initCollectionPage() {
         activeFilters.pays = "";
         activeFilters.brasserie = "";
         activeFilters.search = "";
+        activeFilters.illustrationFemme = false;
         if (searchInput) searchInput.value = "";
         if (paysSelect) paysSelect.value = "";
         if (brasserieSelect) brasserieSelect.value = "";
+        if (illustrationBtn) illustrationBtn.classList.remove("is-active");
         [typeContainer, contenanceContainer].forEach((c) => {
           if (c) c.querySelectorAll(".tag-option").forEach((b) => b.classList.remove("is-active"));
         });
