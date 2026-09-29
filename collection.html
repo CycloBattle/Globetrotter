@@ -1,76 +1,119 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Toute la Collection</title>
-  <link rel="stylesheet" href="css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CAN & BOTTLE COLLEC — Ma Collection</title>
+<meta name="description" content="Toute la collection de cannettes et bouteilles, filtrable par type, contenance, pays et brasserie.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-  <header>
-    <nav class="navbar">
-      <div class="logo">🥤 Can & Bottle Collec</div>
-      <ul class="nav-links">
+<header class="site-header">
+  <div class="container">
+    <nav class="main-nav">
+      <ul>
         <li><a href="index.html">Accueil</a></li>
-        <li><a href="collection.html" class="active">Ma Collection</a></li>
+        <li><a href="collection.html" class="is-active">Ma Collection</a></li>
       </ul>
     </nav>
-  </header>
-
-  <main class="collection-page">
-    <h1>Ma Collection Complete</h1>
-
-    <!-- Barre de Filtres Multiples -->
-    <div class="filters">
-      <select id="filter-type">
-        <option value="">Tous les types</option>
-        <option value="Cannette">Cannette</option>
-        <option value="Bouteille">Bouteille</option>
-      </select>
-
-      <select id="filter-volume">
-        <option value="">Tous les volumes</option>
-        <option value="25cl">25cl</option>
-        <option value="33cl">33cl</option>
-        <option value="50cl">50cl</option>
-        <option value="75cl">75cl</option>
-      </select>
-
-      <select id="filter-theme">
-        <option value="">Tous les thèmes</option>
-        <option value="Illustration femme">Illustration femme</option>
-        <option value="Trappiste">Trappiste</option>
-      </select>
-
-      <select id="filter-pays">
-        <option value="">Tous les pays</option>
-        <option value="France">France</option>
-        <option value="Belgique">Belgique</option>
-      </select>
-    </div>
-
-    <!-- Grille de la Collection -->
-    <div class="grid" id="collection-grid">
-      <!-- Cartes injectées dynamiquement -->
-    </div>
-  </main>
-
-  <!-- Modal pour afficher les détails et la note au clic sur la photo -->
-  <div id="modal" class="modal">
-    <div class="modal-content">
-      <span class="close-btn" id="close-modal">&times;</span>
-      <img id="modal-img" src="" alt="Détail">
-      <h2 id="modal-title"></h2>
-      <div class="tags" id="modal-tags"></div>
-      <div class="rating" id="modal-rating"></div>
-      <p id="modal-desc"></p>
-    </div>
+    <a href="index.html" class="site-title">CAN &amp; BOTTLE <span>COLLEC</span></a>
   </div>
+</header>
 
-  <script src="js/app.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', loadCollection);
-  </script>
+<main>
+
+  <section class="hero">
+    <div class="container">
+      <h1>Toute la Collection</h1>
+      <p>Filtre par type, contenance, pays ou brasserie, ou recherche directement une pièce par son nom.</p>
+
+      <div class="search-bar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="11" cy="11" r="7"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="collection-search" placeholder="Rechercher par nom, brasserie, style...">
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+
+      <p class="load-status" id="load-status">Chargement de la collection…</p>
+
+      <div class="collection-layout">
+
+        <aside class="filters-panel">
+          <div class="filter-group">
+            <h3>Type</h3>
+            <div class="tag-list" id="filter-type"></div>
+          </div>
+
+          <div class="filter-group">
+            <h3>Contenance</h3>
+            <div class="tag-list" id="filter-contenance"></div>
+          </div>
+
+          <div class="filter-group">
+            <h3>Pays</h3>
+            <select class="select-field" id="filter-pays"></select>
+          </div>
+
+          <div class="filter-group">
+            <h3>Brasserie</h3>
+            <select class="select-field" id="filter-brasserie"></select>
+          </div>
+
+          <div class="filter-group">
+            <h3>Illustration</h3>
+            <div class="tag-list">
+              <button type="button" class="tag-option" id="filter-illustration-femme">Illustration femme</button>
+            </div>
+          </div>
+
+          <button type="button" class="reset-filters" id="reset-filters">Réinitialiser les filtres</button>
+        </aside>
+
+        <div class="collection-results">
+          <div class="results-toolbar">
+            <span class="results-count" id="results-count"></span>
+          </div>
+          <div class="card-grid" id="collection-grid"></div>
+        </div>
+
+      </div>
+
+      <div class="map-wrap">
+        <div class="section-heading">
+          <h2>Carte de la collection</h2>
+          <span class="section-note">Un marqueur par pays représenté</span>
+        </div>
+        <div id="collection-map"></div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <span>CAN &amp; BOTTLE COLLEC</span>
+    <span id="total-count"></span>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="js/app.js"></script>
 </body>
 </html>
