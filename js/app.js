@@ -11,7 +11,7 @@
  * complète (deux méthodes possibles y sont expliquées).
  */
 const SHEET_CSV_URL =
-  "https://docs.google.com/spreadsheets/d/1eWpclz7beYMajhqBP2ntZ4KWYr4f-bk12UZ7g02cKEo/export?format=csv&gid=2016268470";
+  "https://docs.google.com/spreadsheets/d/1eWpclz7beYMajhqBP2ntZ4KWYr4f-bk12UZ7g02cKEo/edit?gid=2016268470#gid=2016268470";
 
 /* Colonnes attendues dans le Google Sheet (voir README.md) */
 const COLUMNS = {
