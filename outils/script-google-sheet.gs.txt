@@ -1,0 +1,29 @@
+/*
+ * CAN & BOTTLE COLLEC — script a coller dans Extensions > Apps Script
+ * de ton Google Sheet. Voir le README.md, section "Ajout automatise",
+ * pour la procedure complete de deploiement.
+ */
+function doPost(e) {
+  try {
+    var data = JSON.parse(e.postData.contents);
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
+
+    var lastColumn = sheet.getLastColumn();
+    var headers = sheet.getRange(1, 1, 1, lastColumn).getValues()[0];
+
+    var row = headers.map(function (header) {
+      var value = data.row[header];
+      return value !== undefined ? value : "";
+    });
+
+    sheet.appendRow(row);
+
+    return ContentService
+      .createTextOutput(JSON.stringify({ ok: true }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ ok: false, error: String(err) }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
