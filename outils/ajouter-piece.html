@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CAN & BOTTLE COLLEC — Ajouter une pièce</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
+
+<style>
+  :root {
+    --bg: #241f1c;
+    --bg-raised: #2b2521;
+    --card-bg: #332b25;
+    --card-border: #46392e;
+    --image-bg: #1b1714;
+    --text: #f3ede2;
+    --text-muted: #b6a996;
+    --text-faint: #8f8172;
+    --accent: #d9a441;
+    --accent-dark: #b3812c;
+    --danger: #c9553f;
+    --ok: #7fb069;
+    --font-display: 'Oswald', 'Arial Narrow', sans-serif;
+    --font-body: 'Work Sans', 'Segoe UI', sans-serif;
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    line-height: 1.5;
+  }
+
+  .wrap {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 36px 24px 90px;
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: 30px;
+    letter-spacing: 0.02em;
+    margin: 0 0 6px;
+  }
+
+  h2 {
+    font-family: var(--font-display);
+    font-size: 19px;
+    letter-spacing: 0.02em;
+    margin: 0 0 14px;
+  }
+
+  .intro {
+    color: var(--text-muted);
+    font-size: 15px;
+    max-width: 640px;
+    margin: 0 0 28px;
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 14px;
+  }
+
+  .back-link:hover { color: var(--accent); }
+
+  details.settings {
+    background: var(--bg-raised);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    font-size: 14px;
+  }
+
+  details.settings summary {
+    cursor: pointer;
+    font-family: var(--font-display);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .settings-grid {
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .field label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-faint);
+  }
+
+  .field .hint {
+    font-size: 12px;
+    color: var(--text-faint);
+  }
+
+  input[type="text"],
+  input[type="number"],
+  input[type="password"],
+  input[type="date"],
+  textarea,
+  select {
+    width: 100%;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    font-size: 14px;
+    font-family: var(--font-body);
+  }
+
+  textarea { resize: vertical; min-height: 70px; }
+
+  section.block {
+    background: var(--bg-raised);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 22px;
+    margin-bottom: 24px;
+  }
+
+  .dropzone {
+    border: 2px dashed var(--card-border);
+    border-radius: var(--radius);
+    padding: 40px 24px;
+    text-align: center;
+    color: var(--text-faint);
+    cursor: pointer;
+  }
+
+  .dropzone:hover, .dropzone.is-dragover {
+    border-color: var(--accent);
+    color: var(--text);
+  }
+
+  .dropzone input { display: none; }
+
+  .image-stage {
+    background: var(--image-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    max-height: 380px;
+    margin-top: 16px;
+    display: none;
+  }
+
+  .image-stage.is-visible { display: block; }
+  .image-stage img { display: block; max-width: 100%; }
+
+  .crop-controls {
+    margin-top: 16px;
+    display: none;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .crop-controls.is-visible { display: flex; }
+
+  button.chip {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-muted);
+    border-radius: 999px;
+    padding: 7px 13px;
+    font-size: 13px;
+    font-family: var(--font-body);
+    cursor: pointer;
+  }
+
+  button.chip:hover { border-color: var(--accent); color: var(--text); }
+  button.chip.is-active {
+    background: rgba(217, 164, 65, 0.16);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+
+  .form-grid .span-2 { grid-column: span 2; }
+
+  .checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+  }
+
+  .actions {
+    margin-top: 28px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #241f1c;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 14px 24px;
+    font-family: var(--font-display);
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .btn-primary:hover { background: var(--accent-dark); }
+  .btn-primary:disabled { opacity: 0.5; cursor: wait; }
+
+  .status-line {
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  .status-line.is-error { color: var(--danger); }
+  .status-line.is-ok { color: var(--ok); }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <a class="back-link" href="../index.html">&larr; Retour au site</a>
+
+  <h1>Ajouter une pièce</h1>
+  <p class="intro">
+    Remplis les informations, dépose une photo, recadre-la si besoin, puis clique sur Enregistrer :
+    la photo part sur GitHub et la ligne part directement dans ton Google Sheet. Rien d'autre à faire.
+  </p>
+
+  <details class="settings">
+    <summary>Réglages techniques (à faire une seule fois)</summary>
+    <div class="settings-grid">
+      <div class="field">
+        <label for="gh-owner">Nom d'utilisateur GitHub</label>
+        <input type="text" id="gh-owner" placeholder="ex. jdupont">
+      </div>
+      <div class="field">
+        <label for="gh-repo">Nom du dépôt GitHub</label>
+        <input type="text" id="gh-repo" placeholder="can-bottle-collec">
+      </div>
+      <div class="field">
+        <label for="gh-token">Jeton d'accès GitHub (PAT)</label>
+        <input type="password" id="gh-token" placeholder="github_pat_...">
+        <span class="hint">Reste uniquement dans ce navigateur.</span>
+      </div>
+      <div class="field">
+        <label for="sheet-url">URL du script Google Sheet</label>
+        <input type="text" id="sheet-url" placeholder="https://script.google.com/macros/s/.../exec">
+      </div>
+    </div>
+  </details>
+
+  <section class="block">
+    <h2>1. Photo</h2>
+    <div class="dropzone" id="dropzone">
+      <p>Glisse une photo ici, ou clique pour en choisir une.</p>
+      <input type="file" id="file-input" accept="image/*">
+    </div>
+    <div class="image-stage" id="image-stage">
+      <img id="source-image" alt="Photo à retoucher">
+    </div>
+    <div class="crop-controls" id="crop-controls">
+      <button type="button" class="chip is-active" data-ratio="0">Libre</button>
+      <button type="button" class="chip" data-ratio="1">Carré 1:1</button>
+      <button type="button" class="chip" data-ratio="0.75">Portrait 3:4</button>
+      <button type="button" class="chip" data-ratio="1.3333">Paysage 4:3</button>
+      <button type="button" class="chip" id="rotate-left">Tourner -90°</button>
+      <button type="button" class="chip" id="rotate-right">Tourner +90°</button>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2>2. Informations</h2>
+    <div class="form-grid">
+      <div class="field span-2">
+        <label for="f-nom">Nom *</label>
+        <input type="text" id="f-nom" placeholder="Mang Shen">
+      </div>
+      <div class="field">
+        <label for="f-type">Type</label>
+        <select id="f-type">
+          <option value="Cannette">Cannette</option>
+          <option value="Bouteille">Bouteille</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="f-contenance">Contenance</label>
+        <input type="text" id="f-contenance" placeholder="33cl">
+      </div>
+      <div class="field">
+        <label for="f-brasserie">Brasserie</label>
+        <input type="text" id="f-brasserie" placeholder="Mont Hardi">
+      </div>
+      <div class="field">
+        <label for="f-style">Style</label>
+        <input type="text" id="f-style" placeholder="Blonde - Saison">
+      </div>
+      <div class="field">
+        <label for="f-pays">Pays</label>
+        <input type="text" id="f-pays" placeholder="France">
+      </div>
+      <div class="field">
+        <label for="f-note">Note (sur 5)</label>
+        <input type="number" id="f-note" min="0" max="5" step="0.5" placeholder="4.5">
+      </div>
+      <div class="field span-2">
+        <label for="f-description">Description</label>
+        <textarea id="f-description" placeholder="Houblonnée, notes d'agrumes..."></textarea>
+      </div>
+      <div class="field span-2">
+        <label for="f-adresse">Adresse de la brasserie (optionnel, positionne la carte automatiquement)</label>
+        <input type="text" id="f-adresse" placeholder="12 Rue de la Brasserie, Lyon, France">
+      </div>
+      <div class="field">
+        <label for="f-latitude">Latitude du pays (optionnel)</label>
+        <input type="text" id="f-latitude" placeholder="46.2276">
+      </div>
+      <div class="field">
+        <label for="f-longitude">Longitude du pays (optionnel)</label>
+        <input type="text" id="f-longitude" placeholder="2.2137">
+      </div>
+      <div class="field">
+        <label for="f-date">Date d'ajout</label>
+        <input type="date" id="f-date">
+      </div>
+      <div class="field">
+        <div class="checkbox-row">
+          <input type="checkbox" id="f-illustration">
+          <label for="f-illustration" style="text-transform:none;letter-spacing:0;font-size:14px;color:var(--text);">Illustration représentant une femme</label>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="actions">
+    <button type="button" class="btn-primary" id="save-btn">Enregistrer la pièce</button>
+    <span class="status-line" id="status-line"></span>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+<script>
+  const SETTINGS_KEY = "cbc-admin-settings";
+
+  const ghOwner = document.getElementById("gh-owner");
+  const ghRepo = document.getElementById("gh-repo");
+  const ghToken = document.getElementById("gh-token");
+  const sheetUrl = document.getElementById("sheet-url");
+
+  function loadSettings() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}");
+      ghOwner.value = saved.owner || "";
+      ghRepo.value = saved.repo || "";
+      ghToken.value = saved.token || "";
+      sheetUrl.value = saved.sheetUrl || "";
+    } catch (e) {}
+  }
+
+  function saveSettings() {
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify({
+      owner: ghOwner.value.trim(),
+      repo: ghRepo.value.trim(),
+      token: ghToken.value.trim(),
+      sheetUrl: sheetUrl.value.trim(),
+    }));
+  }
+
+  [ghOwner, ghRepo, ghToken, sheetUrl].forEach((el) => el.addEventListener("change", saveSettings));
+
+  loadSettings();
+
+  document.getElementById("f-date").valueAsDate = new Date();
+
+  const dropzone = document.getElementById("dropzone");
+  const fileInput = document.getElementById("file-input");
+  const imageStage = document.getElementById("image-stage");
+  const sourceImage = document.getElementById("source-image");
+  const cropControls = document.getElementById("crop-controls");
+  const statusLine = document.getElementById("status-line");
+  const saveBtn = document.getElementById("save-btn");
+
+  let cropper = null;
+  let hasPhoto = false;
+
+  function slugify(value) {
+    return value
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+  }
+
+  function loadFile(file) {
+    if (!file || !file.type.startsWith("image/")) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      sourceImage.src = e.target.result;
+      imageStage.classList.add("is-visible");
+      cropControls.classList.add("is-visible");
+      hasPhoto = true;
+
+      if (cropper) cropper.destroy();
+      cropper = new Cropper(sourceImage, {
+        viewMode: 1,
+        autoCropArea: 1,
+        background: false,
+      });
+    };
+    reader.readAsDataURL(file);
+  }
+
+  dropzone.addEventListener("click", () => fileInput.click());
+  fileInput.addEventListener("change", (e) => {
+    if (e.target.files && e.target.files[0]) loadFile(e.target.files[0]);
+  });
+
+  ["dragenter", "dragover"].forEach((evt) =>
+    dropzone.addEventListener(evt, (e) => { e.preventDefault(); dropzone.classList.add("is-dragover"); })
+  );
+  ["dragleave", "drop"].forEach((evt) =>
+    dropzone.addEventListener(evt, (e) => { e.preventDefault(); dropzone.classList.remove("is-dragover"); })
+  );
+  dropzone.addEventListener("drop", (e) => {
+    const file = e.dataTransfer.files && e.dataTransfer.files[0];
+    if (file) loadFile(file);
+  });
+
+  cropControls.addEventListener("click", (e) => {
+    const btn = e.target.closest(".chip");
+    if (!btn || !cropper) return;
+
+    if (btn.id === "rotate-left") { cropper.rotate(-90); return; }
+    if (btn.id === "rotate-right") { cropper.rotate(90); return; }
+
+    if (btn.dataset.ratio !== undefined) {
+      cropControls.querySelectorAll(".chip[data-ratio]").forEach((b) => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+      const ratio = parseFloat(btn.dataset.ratio);
+      cropper.setAspectRatio(ratio === 0 ? NaN : ratio);
+    }
+  });
+
+  function setStatus(text, kind) {
+    statusLine.textContent = text;
+    statusLine.className = "status-line" + (kind ? " is-" + kind : "");
+  }
+
+  function githubHeaders() {
+    return {
+      "Authorization": "Bearer " + ghToken.value.trim(),
+      "Accept": "application/vnd.github+json",
+      "Content-Type": "application/json",
+    };
+  }
+
+  function uploadImageToGitHub(filename, base64Content) {
+    const owner = ghOwner.value.trim();
+    const repo = ghRepo.value.trim();
+    const url = "https://api.github.com/repos/" + owner + "/" + repo + "/contents/images/" + filename;
+
+    return fetch(url, {
+      method: "PUT",
+      headers: githubHeaders(),
+      body: JSON.stringify({
+        message: "Ajout photo " + filename,
+        content: base64Content,
+      }),
+    }).then((r) => {
+      if (!r.ok) {
+        return r.json().then((body) => {
+          throw new Error("GitHub (" + r.status + ") : " + (body.message || "erreur inconnue"));
+        });
+      }
+      return r.json();
+    });
+  }
+
+  function canvasToBase64Jpeg(canvas, quality) {
+    const dataUrl = canvas.toDataURL("image/jpeg", quality);
+    return dataUrl.split(",")[1];
+  }
+
+  function appendRowToSheet(row) {
+    /* Les navigateurs bloquent la lecture de la reponse d'un script Google
+       deploye ainsi (restriction de securite CORS), meme avec "Qui a acces :
+       Tout le monde". On envoie donc la requete en mode "no-cors" : le script
+       s'execute bien cote Google (la ligne est ajoutee), mais on ne peut pas
+       lire sa reponse pour confirmer le succes depuis ce navigateur. */
+    return fetch(sheetUrl.value.trim(), {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ row: row }),
+    });
+  }
+
+  saveBtn.addEventListener("click", async () => {
+    const nom = document.getElementById("f-nom").value.trim();
+    if (!nom) {
+      setStatus("Le nom est obligatoire.", "error");
+      return;
+    }
+    if (!ghOwner.value.trim() || !ghRepo.value.trim() || !ghToken.value.trim() || !sheetUrl.value.trim()) {
+      setStatus("Remplis d'abord les réglages techniques en haut de la page.", "error");
+      return;
+    }
+
+    saveBtn.disabled = true;
+    let imagePath = "";
+
+    try {
+      if (hasPhoto && cropper) {
+        setStatus("Envoi de la photo vers GitHub...");
+        const canvas = cropper.getCroppedCanvas({ width: 1200 });
+        const base64 = canvasToBase64Jpeg(canvas, 0.8);
+        const filename = slugify(nom) + "-" + Date.now() + ".jpg";
+        await uploadImageToGitHub(filename, base64);
+        imagePath = "images/" + filename;
+      }
+
+      setStatus("Ajout de la ligne dans le Google Sheet...");
+
+      const row = {
+        ID: String(Date.now()),
+        Nom: nom,
+        Type: document.getElementById("f-type").value,
+        Contenance: document.getElementById("f-contenance").value.trim(),
+        Brasserie: document.getElementById("f-brasserie").value.trim(),
+        Style: document.getElementById("f-style").value.trim(),
+        Pays: document.getElementById("f-pays").value.trim(),
+        Latitude: document.getElementById("f-latitude").value.trim(),
+        Longitude: document.getElementById("f-longitude").value.trim(),
+        Note: document.getElementById("f-note").value.trim(),
+        Description: document.getElementById("f-description").value.trim(),
+        ImageURL: imagePath,
+        DateAjout: document.getElementById("f-date").value,
+        IllustrationFemme: document.getElementById("f-illustration").checked ? "Oui" : "Non",
+        AdresseBrasserie: document.getElementById("f-adresse").value.trim(),
+        LatitudeBrasserie: "",
+        LongitudeBrasserie: "",
+      };
+
+      await appendRowToSheet(row);
+
+      setStatus(
+        "Envoyé. Le navigateur ne peut pas confirmer la réception côté Google (limitation technique), " +
+          "vérifie dans ton Google Sheet que la ligne est bien apparue tout en bas.",
+        "ok"
+      );
+    } catch (err) {
+      setStatus("Erreur : " + err.message, "error");
+    } finally {
+      saveBtn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>
