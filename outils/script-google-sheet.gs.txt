@@ -32,6 +32,39 @@ function doPost(e) {
   }
 }
 
+/*
+ * Mode diagnostic : ouvre simplement l'URL /exec dans un navigateur
+ * (sans rien ajouter apres) pour voir si le script repond, quel onglet
+ * il detecte, et quelles colonnes il y lit. Tres utile pour verifier
+ * que le deploiement fonctionne, independamment de l'outil HTML.
+ */
+function doGet(e) {
+  try {
+    var sheet = findCollectionSheet();
+
+    if (!sheet) {
+      return ContentService
+        .createTextOutput("DIAGNOSTIC : aucun onglet avec une colonne 'Nom' n'a ete trouve dans ce classeur.")
+        .setMimeType(ContentService.MimeType.TEXT);
+    }
+
+    var lastColumn = sheet.getLastColumn();
+    var headers = sheet.getRange(1, 1, 1, lastColumn).getValues()[0];
+
+    return ContentService
+      .createTextOutput(
+        "DIAGNOSTIC OK.\nOnglet detecte : " + sheet.getName() +
+        "\nNombre de colonnes : " + lastColumn +
+        "\nColonnes lues : " + headers.join(" | ")
+      )
+      .setMimeType(ContentService.MimeType.TEXT);
+  } catch (err) {
+    return ContentService
+      .createTextOutput("DIAGNOSTIC : erreur -> " + String(err))
+      .setMimeType(ContentService.MimeType.TEXT);
+  }
+}
+
 /* Cherche, parmi tous les onglets du classeur, celui dont la premiere
    ligne contient une colonne nommee "Nom" (peu importe sa position parmi
    les onglets). Evite de se tromper d'onglet si la collection n'est pas
