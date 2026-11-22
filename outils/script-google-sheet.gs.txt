@@ -6,7 +6,11 @@
 function doPost(e) {
   try {
     var data = JSON.parse(e.postData.contents);
-    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
+    var sheet = findCollectionSheet();
+
+    if (!sheet) {
+      throw new Error("Aucun onglet avec une colonne 'Nom' n'a ete trouve.");
+    }
 
     var lastColumn = sheet.getLastColumn();
     var headers = sheet.getRange(1, 1, 1, lastColumn).getValues()[0];
@@ -26,4 +30,22 @@ function doPost(e) {
       .createTextOutput(JSON.stringify({ ok: false, error: String(err) }))
       .setMimeType(ContentService.MimeType.JSON);
   }
+}
+
+/* Cherche, parmi tous les onglets du classeur, celui dont la premiere
+   ligne contient une colonne nommee "Nom" (peu importe sa position parmi
+   les onglets). Evite de se tromper d'onglet si la collection n'est pas
+   sur le tout premier. */
+function findCollectionSheet() {
+  var sheets = SpreadsheetApp.getActiveSpreadsheet().getSheets();
+  for (var i = 0; i < sheets.length; i++) {
+    var sheet = sheets[i];
+    var lastColumn = sheet.getLastColumn();
+    if (lastColumn === 0) continue;
+    var headers = sheet.getRange(1, 1, 1, lastColumn).getValues()[0];
+    if (headers.indexOf("Nom") !== -1) {
+      return sheet;
+    }
+  }
+  return null;
 }
